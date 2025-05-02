@@ -22,7 +22,9 @@ class MainPage extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
+          
         ],
+        
       ),
     );
   }
