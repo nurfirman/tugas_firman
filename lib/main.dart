@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tugas_firman/bloc/auth/auth_cubit.dart';
 import 'package:tugas_firman/bloc/routes.dart';
 import 'package:tugas_firman/bloc/theme_cubit.dart';
-import 'package:tugas_firman/bloc/theme_local_storage.dart';
+import 'package:tugas_firman/db/auth_local_storage.dart';
+import 'package:tugas_firman/db/remote_data/auth_remote_data.dart';
 import 'package:tugas_firman/injector.dart';
+import 'package:tugas_firman/theme/dark_theme.dart';
+import 'package:tugas_firman/theme/light_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,23 +22,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ThemeCubit>(
+        BlocProvider(create: (context) => AuthCubit(
+          getIt.get<AuthLocalStorage>(),
+          getIt.get<AuthRemoteData>(),
+        )),
+        BlocProvider(
           create: (context) => ThemeCubit(
-            ThemeLocalStorage(
-              getIt<SharedPreferences>(),
-            ),
+            getIt.get()
           )..init(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
-        builder: (context, state) {
+        builder: (context, themeMode) {
           return MaterialApp(
-            title: 'Flutter Demo',
-            themeMode: state,
-            theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
+            title: 'Flutter FInal Project',
+            debugShowCheckedModeBanner: false,
+            themeMode: themeMode,
+            theme: lightTheme(context),
+            darkTheme: darkTheme(context),
+            initialRoute: AppRoutes.splash,
             routes: routes,
-            initialRoute: AppRoutes.home,
           );
         }
       ),

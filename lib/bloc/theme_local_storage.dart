@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
 class ThemeLocalStorage {
 
-  final SharedPreferences _prefs;
+  late final Box box;
 
-  ThemeLocalStorage(this._prefs);
+  ThemeLocalStorage(this.box);
 
-  Future<void> setTheme(ThemeMode theme) async {
-    await _prefs.setString('theme', theme.toString());
+  ThemeMode get theme {
+    final options = {
+      "dark": ThemeMode.dark,
+      "light": ThemeMode.light,
+      "system": ThemeMode.system,
+    };
+    final str = box.get("theme");
+    return options[str] ?? ThemeMode.system;
   }
-  
-  ThemeMode getTheme() {
-    final themeString = _prefs.getString('theme');
-    if (themeString == null) {
-      return ThemeMode.system;
-    }
-    switch (themeString) {
-      case 'ThemeMode.light':
-        return ThemeMode.light;
-      case 'ThemeMode.dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
+
+  Future<void> setTheme(ThemeMode data) async {
+    await box.put("theme", data.name);
   }
 
 }

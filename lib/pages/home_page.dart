@@ -15,8 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  var name = "Lionel Messi";
-  var index = 0;
+  var currentIndex = 0;
 
   final db = AbsensiDb(getIt<AppDatabase>());
   final Absensi = <AbsensiData>[];
@@ -78,39 +77,36 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+ @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      body: [
-        AbsensiPage(),
-        ProfilePage(
-          name: name,
-          onSave: (val) {
-            setState(() {
-              name = val;
-            });
-          },
+    return 
+    Scaffold(
+  body: [
+          const AbsensiPage(),
+          const ProfilePage(),
+        ][currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (value) => setState(() {
+            currentIndex = value;
+          }),
+          items: const [
+            
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shop),
+              label: 'Absensi'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile'
+            ),
+          ],
         ),
-       
-      ][index],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        onTap: (value) => setState(() => index = value),
-        unselectedItemColor: Colors.blue,
-        selectedItemColor: Colors.blueGrey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Absensi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ]
-      ),
-    );
+      );
   }
 }

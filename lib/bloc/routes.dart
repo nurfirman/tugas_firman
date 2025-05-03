@@ -14,6 +14,6 @@ class AppRoutes {
 final routes = {
   AppRoutes.splash: (context) => const SplashScreen(),
   AppRoutes.home: (context) => const HomePage(),
-  AppRoutes.absensi: (context) => const AbsensiPage(),
   AppRoutes.login: (context) => const LoginPage(),
+  AppRoutes.absensi: (context) => const AbsensiPage(),
 };

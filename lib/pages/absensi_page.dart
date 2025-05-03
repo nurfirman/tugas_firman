@@ -4,7 +4,6 @@ import 'package:tugas_firman/db/absensi_db.dart';
 import 'package:tugas_firman/db/app_db.dart';
 import 'package:tugas_firman/injector.dart';
 import 'package:tugas_firman/pages/absensi_form_page.dart';
-import 'package:tugas_firman/pages/setting_page.dart';
 
 class AbsensiPage extends StatefulWidget {
   const AbsensiPage({super.key});
@@ -85,9 +84,9 @@ class _AbsensiPageState extends State<AbsensiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Absensi Labour Project'),
         actions: [
-                    IconButton(
+            IconButton(
             onPressed: () async {
               final result = await Navigator.push(
                 context,
@@ -103,35 +102,21 @@ class _AbsensiPageState extends State<AbsensiPage> {
             },
             icon: Icon(Icons.add),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () async {
-              final result = await Navigator.push(context, MaterialPageRoute(
-                builder: (context) => SettingPage(
-                  name: name,
-                ),
-              ));
-              if(result != null) {
-                setState(() {
-                  name = result;
-                });
-              }
-            },
-          ),
+          
         ],
       ),
-      body: ListView.separated(
+      body: 
+      ListView.separated(
         padding: EdgeInsets.all(16),
         itemCount: Absensi.length,
         separatorBuilder: (_, __) => SizedBox(height: 16), 
         itemBuilder: (_, index) => Card(
           child: ListTile(
-            title: Text(Absensi[index].name),
+            title: Text(Absensi[index].dateAbsen.toString()),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(Absensi[index].status),  
-                IconButton(
+                                IconButton(
                   onPressed: () async {
                     final result = await Navigator.push(
                       context,
@@ -157,7 +142,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
                   },
                   icon: Icon(Icons.delete),
                 ),
-              ],
+              ],  
             )
           ),
         ), 

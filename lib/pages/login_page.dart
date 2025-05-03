@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
 
   late final AuthCubit authCubit;
 
-  var showPassword = false;
+  var showPassword = true;
 
   @override
   void initState() {

@@ -4,25 +4,18 @@ import 'package:tugas_firman/bloc/theme_local_storage.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
 
-  final ThemeLocalStorage themeLocalStorage;
+  late final ThemeLocalStorage themeLocalStorage;
 
   ThemeCubit(
-    this.themeLocalStorage,
-  ) : super(ThemeMode.light);
+    this.themeLocalStorage
+  ) : super(ThemeMode.system);
 
-  void init() {
-    final theme = themeLocalStorage.getTheme();
-    emit(theme);
+  init() {
+    emit(themeLocalStorage.theme);
   }
 
-  void toggleTheme() {
-    if (state == ThemeMode.light) {
-      themeLocalStorage.setTheme(ThemeMode.dark);
-      emit(ThemeMode.dark);
-    } else {
-      themeLocalStorage.setTheme(ThemeMode.light);
-      emit(ThemeMode.light);
-    }
+  void switchTheme(ThemeMode themeMode) async {
+    await themeLocalStorage.setTheme(themeMode);
+    emit(themeMode);
   }
-
 }

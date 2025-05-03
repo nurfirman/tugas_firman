@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tugas_firman/bloc/auth/auth_cubit.dart';
+import 'package:tugas_firman/bloc/auth/auth_state.dart';
 
 class AbsensiFormPage extends StatefulWidget {
   
@@ -36,6 +39,7 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Absensi Form'),
@@ -47,7 +51,10 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
           child: Column(
             spacing: 16,
             children: [
-              TextFormField(
+                BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  _nameController.text = state.user?.name ?? '';
+                  return TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Nama Karyawan',
@@ -58,7 +65,7 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
                   }
                   return null;
                 },
-              ),
+              );}),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     value: typeAbsen,
