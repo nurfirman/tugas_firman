@@ -1,39 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tugas_firman/bloc/auth/auth_cubit.dart';
 import 'package:tugas_firman/bloc/auth/auth_state.dart';
-
+import 'package:location/location.dart';
 
 class AbsensiFormPage extends StatefulWidget {
   
   final String? name;
   final String? status;
   final String? project;
+  final String? tagGps;
   
   const AbsensiFormPage({
     super.key,
     this.name,
     this.status,
-    this.project
+    this.project,
+    this.tagGps,
     });
 
   @override
   State<AbsensiFormPage> createState() => _AbsensiFormPageState();
 }
 
+
+
 class _AbsensiFormPageState extends State<AbsensiFormPage> {
-final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String barcode = "";
   final _nameController = TextEditingController();
   final _projectController = TextEditingController();
+  final _gpsController = TextEditingController();
   var typeAbsen = 'masuk';
-
+  final Location location = Location();
   final _formKey = GlobalKey<FormState>();
+  PermissionStatus? permissionGranted;
+  LocationData? _location;
+
+String? _error; 
+
+  Future<void> _getLocation() async {
+    setState(() {
+      _error = null;
+    });
+    try {
+      final locationResult = await location.getLocation();
+      setState(() {
+        _location = locationResult;
+      });
+    } on PlatformException catch (err) {
+      setState(() {
+        _error = err.code;
+      });
+    }
+  }
 
   @override
   void initState() {
     _nameController.text = widget.name ?? '';
-    _projectController.text = widget.status ?? '';
+    _projectController.text = widget.project ?? '';
+    _gpsController.text = widget.tagGps ?? '';
+   _checkPermissions();
+   _requestPermission();
+   _getLocation();
     super.initState();
+  }
+
+  Future<void> _checkPermissions() async {
+    final permissionGrantedResult = await location.hasPermission();
+    setState(() {
+      permissionGranted = permissionGrantedResult;
+    });
+  }
+Future<void> _requestPermission() async {
+    if (permissionGranted != PermissionStatus.granted) {
+      final permissionRequestedResult = await location.requestPermission();
+      setState(() {
+        permissionGranted = permissionRequestedResult;
+      });
+    }
   }
 
   @override
@@ -45,7 +90,7 @@ final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   @override
   Widget build(BuildContext context) {
-
+  
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Absensi Form'),
@@ -114,8 +159,9 @@ final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
                     if(_formKey.currentState?.validate() ?? false) {
                       final name = _nameController.text;
                       final project = _projectController.text;
+                      final tagGps = '${_location?.latitude}, ${_location?.longitude}';
                       String type = typeAbsen;
-                      Navigator.pop(context, {'name': name, 'status':type , 'project': project});
+                      Navigator.pop(context, {'name': name, 'status':type , 'project': project, 'tagGps': tagGps});
                     }
                   }, 
                 ),
@@ -125,10 +171,12 @@ final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 //     print(result.barcodes.first.rawValue);
 //   },
 // ),
+
             ],
           ),
         ),
       ),
     );
   }
+
 }

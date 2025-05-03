@@ -19,6 +19,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
   final now = DateTime.now();
   var name = "Lionel Messi";
   var project = "Project A";
+  var tagGps = "Gps Tag";
   
   @override
   void initState() {
@@ -51,13 +52,14 @@ class _AbsensiPageState extends State<AbsensiPage> {
     String name = '',
     String status = 'Masuk',
     String project = '',
+    String tagGps = '',
   }) async {
     try {
       final absensi = AbsensiCompanion(
         name: Value(name),
         dateAbsen: Value(now),
         status: Value(status),
-        tagGps: Value("kantor"),
+        tagGps: Value(tagGps),
         project: Value(project),
       );
       await db.addAbsensi(absensi);
@@ -106,6 +108,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
                   name: result['name'], 
                   project: result['project'],
                   status: result['status'],
+                  tagGps: result['tagGps'],
                 );
               }
             },
@@ -123,41 +126,44 @@ class _AbsensiPageState extends State<AbsensiPage> {
         Card(
           child: ListTile(
             title: Text(DateFormat('EEE, dd MMMM y hh:mm:ss').format(Absensi[index].dateAbsen!)),
-            subtitle: Text(Absensi[index].project.toString()),
+            subtitle: Text("${Absensi[index].project} \n ${Absensi[index].tagGps}"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-              IconButton(
-                  onPressed: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AbsensiFormPage(
-                          name: Absensi[index].name,
-                          status: Absensi[index].status,
-                          project: Absensi[index].project,
-                        ),
-                      ),
-                    );
-                    if(result != null) {
-                      editAbsensi(
-                        id: Absensi[index].id,
-                        name: result['name'], 
-                      );
-                    }
-                  },
-                  icon: Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () {
-                    delete(Absensi[index].id);
-                  },
-                  icon: Icon(Icons.delete),
-                ),
+                Icon(Absensi[index].status != "masuk" ? Icons.arrow_back : Icons.arrow_forward),
+              // IconButton(
+              //     onPressed: () async {
+              //       final result = await Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => AbsensiFormPage(
+              //             name: Absensi[index].name,
+              //             status: Absensi[index].status,
+              //             project: Absensi[index].project,
+              //             tagGps: Absensi[index].tagGps,
+              //           ),
+              //         ),
+              //       );
+              //       if(result != null) {
+              //         editAbsensi(
+              //           id: Absensi[index].id,
+              //           name: result['name'], 
+              //         );
+              //       }
+              //     },
+              //     icon: Icon(Icons.edit),
+              //   ),
+              //   IconButton(
+              //     onPressed: () {
+              //       delete(Absensi[index].id);
+              //     },
+              //     icon: Icon(Icons.delete),
+              //   ),
               ],  
             ),
           ),
         ), 
+        
       ),
     );
   }
