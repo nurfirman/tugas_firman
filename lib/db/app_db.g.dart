@@ -71,8 +71,30 @@ class $AbsensiTable extends Absensi with TableInfo<$AbsensiTable, AbsensiData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _projectMeta = const VerificationMeta(
+    'project',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name, dateAbsen, status, tagGps];
+  late final GeneratedColumn<String> project = GeneratedColumn<String>(
+    'project',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 150,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    dateAbsen,
+    status,
+    tagGps,
+    project,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -118,6 +140,14 @@ class $AbsensiTable extends Absensi with TableInfo<$AbsensiTable, AbsensiData> {
     } else if (isInserting) {
       context.missing(_tagGpsMeta);
     }
+    if (data.containsKey('project')) {
+      context.handle(
+        _projectMeta,
+        project.isAcceptableOrUnknown(data['project']!, _projectMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectMeta);
+    }
     return context;
   }
 
@@ -151,6 +181,11 @@ class $AbsensiTable extends Absensi with TableInfo<$AbsensiTable, AbsensiData> {
             DriftSqlType.string,
             data['${effectivePrefix}tag_gps'],
           )!,
+      project:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}project'],
+          )!,
     );
   }
 
@@ -166,12 +201,14 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
   final DateTime? dateAbsen;
   final String status;
   final String tagGps;
+  final String project;
   const AbsensiData({
     required this.id,
     required this.name,
     this.dateAbsen,
     required this.status,
     required this.tagGps,
+    required this.project,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -183,6 +220,7 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
     }
     map['status'] = Variable<String>(status);
     map['tag_gps'] = Variable<String>(tagGps);
+    map['project'] = Variable<String>(project);
     return map;
   }
 
@@ -196,6 +234,7 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
               : Value(dateAbsen),
       status: Value(status),
       tagGps: Value(tagGps),
+      project: Value(project),
     );
   }
 
@@ -210,6 +249,7 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
       dateAbsen: serializer.fromJson<DateTime?>(json['dateAbsen']),
       status: serializer.fromJson<String>(json['status']),
       tagGps: serializer.fromJson<String>(json['tagGps']),
+      project: serializer.fromJson<String>(json['project']),
     );
   }
   @override
@@ -221,6 +261,7 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
       'dateAbsen': serializer.toJson<DateTime?>(dateAbsen),
       'status': serializer.toJson<String>(status),
       'tagGps': serializer.toJson<String>(tagGps),
+      'project': serializer.toJson<String>(project),
     };
   }
 
@@ -230,12 +271,14 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
     Value<DateTime?> dateAbsen = const Value.absent(),
     String? status,
     String? tagGps,
+    String? project,
   }) => AbsensiData(
     id: id ?? this.id,
     name: name ?? this.name,
     dateAbsen: dateAbsen.present ? dateAbsen.value : this.dateAbsen,
     status: status ?? this.status,
     tagGps: tagGps ?? this.tagGps,
+    project: project ?? this.project,
   );
   AbsensiData copyWithCompanion(AbsensiCompanion data) {
     return AbsensiData(
@@ -244,6 +287,7 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
       dateAbsen: data.dateAbsen.present ? data.dateAbsen.value : this.dateAbsen,
       status: data.status.present ? data.status.value : this.status,
       tagGps: data.tagGps.present ? data.tagGps.value : this.tagGps,
+      project: data.project.present ? data.project.value : this.project,
     );
   }
 
@@ -254,13 +298,14 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
           ..write('name: $name, ')
           ..write('dateAbsen: $dateAbsen, ')
           ..write('status: $status, ')
-          ..write('tagGps: $tagGps')
+          ..write('tagGps: $tagGps, ')
+          ..write('project: $project')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, dateAbsen, status, tagGps);
+  int get hashCode => Object.hash(id, name, dateAbsen, status, tagGps, project);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -269,7 +314,8 @@ class AbsensiData extends DataClass implements Insertable<AbsensiData> {
           other.name == this.name &&
           other.dateAbsen == this.dateAbsen &&
           other.status == this.status &&
-          other.tagGps == this.tagGps);
+          other.tagGps == this.tagGps &&
+          other.project == this.project);
 }
 
 class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
@@ -278,12 +324,14 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
   final Value<DateTime?> dateAbsen;
   final Value<String> status;
   final Value<String> tagGps;
+  final Value<String> project;
   const AbsensiCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.dateAbsen = const Value.absent(),
     this.status = const Value.absent(),
     this.tagGps = const Value.absent(),
+    this.project = const Value.absent(),
   });
   AbsensiCompanion.insert({
     this.id = const Value.absent(),
@@ -291,15 +339,18 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
     this.dateAbsen = const Value.absent(),
     required String status,
     required String tagGps,
+    required String project,
   }) : name = Value(name),
        status = Value(status),
-       tagGps = Value(tagGps);
+       tagGps = Value(tagGps),
+       project = Value(project);
   static Insertable<AbsensiData> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<DateTime>? dateAbsen,
     Expression<String>? status,
     Expression<String>? tagGps,
+    Expression<String>? project,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -307,6 +358,7 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
       if (dateAbsen != null) 'date_absen': dateAbsen,
       if (status != null) 'status': status,
       if (tagGps != null) 'tag_gps': tagGps,
+      if (project != null) 'project': project,
     });
   }
 
@@ -316,6 +368,7 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
     Value<DateTime?>? dateAbsen,
     Value<String>? status,
     Value<String>? tagGps,
+    Value<String>? project,
   }) {
     return AbsensiCompanion(
       id: id ?? this.id,
@@ -323,6 +376,7 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
       dateAbsen: dateAbsen ?? this.dateAbsen,
       status: status ?? this.status,
       tagGps: tagGps ?? this.tagGps,
+      project: project ?? this.project,
     );
   }
 
@@ -344,6 +398,9 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
     if (tagGps.present) {
       map['tag_gps'] = Variable<String>(tagGps.value);
     }
+    if (project.present) {
+      map['project'] = Variable<String>(project.value);
+    }
     return map;
   }
 
@@ -354,7 +411,8 @@ class AbsensiCompanion extends UpdateCompanion<AbsensiData> {
           ..write('name: $name, ')
           ..write('dateAbsen: $dateAbsen, ')
           ..write('status: $status, ')
-          ..write('tagGps: $tagGps')
+          ..write('tagGps: $tagGps, ')
+          ..write('project: $project')
           ..write(')'))
         .toString();
   }
@@ -378,6 +436,7 @@ typedef $$AbsensiTableCreateCompanionBuilder =
       Value<DateTime?> dateAbsen,
       required String status,
       required String tagGps,
+      required String project,
     });
 typedef $$AbsensiTableUpdateCompanionBuilder =
     AbsensiCompanion Function({
@@ -386,6 +445,7 @@ typedef $$AbsensiTableUpdateCompanionBuilder =
       Value<DateTime?> dateAbsen,
       Value<String> status,
       Value<String> tagGps,
+      Value<String> project,
     });
 
 class $$AbsensiTableFilterComposer
@@ -419,6 +479,11 @@ class $$AbsensiTableFilterComposer
 
   ColumnFilters<String> get tagGps => $composableBuilder(
     column: $table.tagGps,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get project => $composableBuilder(
+    column: $table.project,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -456,6 +521,11 @@ class $$AbsensiTableOrderingComposer
     column: $table.tagGps,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get project => $composableBuilder(
+    column: $table.project,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AbsensiTableAnnotationComposer
@@ -481,6 +551,9 @@ class $$AbsensiTableAnnotationComposer
 
   GeneratedColumn<String> get tagGps =>
       $composableBuilder(column: $table.tagGps, builder: (column) => column);
+
+  GeneratedColumn<String> get project =>
+      $composableBuilder(column: $table.project, builder: (column) => column);
 }
 
 class $$AbsensiTableTableManager
@@ -519,12 +592,14 @@ class $$AbsensiTableTableManager
                 Value<DateTime?> dateAbsen = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String> tagGps = const Value.absent(),
+                Value<String> project = const Value.absent(),
               }) => AbsensiCompanion(
                 id: id,
                 name: name,
                 dateAbsen: dateAbsen,
                 status: status,
                 tagGps: tagGps,
+                project: project,
               ),
           createCompanionCallback:
               ({
@@ -533,12 +608,14 @@ class $$AbsensiTableTableManager
                 Value<DateTime?> dateAbsen = const Value.absent(),
                 required String status,
                 required String tagGps,
+                required String project,
               }) => AbsensiCompanion.insert(
                 id: id,
                 name: name,
                 dateAbsen: dateAbsen,
                 status: status,
                 tagGps: tagGps,
+                project: project,
               ),
           withReferenceMapper:
               (p0) =>

@@ -27,6 +27,15 @@ class AuthState extends Equatable {
     errorMessage: errorMessage ?? this.errorMessage
   );
 
+  factory AuthState.wipe() {
+    return const AuthState(
+      user: null,
+      isLoggedIn: false,
+      loading: false,
+      errorMessage:'',
+);
+}
+
   @override
   List<Object?> get props => [
     user,
@@ -34,5 +43,7 @@ class AuthState extends Equatable {
     loading,
     errorMessage,
   ];
+
+
 
 }

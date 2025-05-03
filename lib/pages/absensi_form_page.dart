@@ -3,15 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tugas_firman/bloc/auth/auth_cubit.dart';
 import 'package:tugas_firman/bloc/auth/auth_state.dart';
 
+
 class AbsensiFormPage extends StatefulWidget {
   
   final String? name;
   final String? status;
+  final String? project;
   
   const AbsensiFormPage({
     super.key,
     this.name,
     this.status,
+    this.project
     });
 
   @override
@@ -19,8 +22,9 @@ class AbsensiFormPage extends StatefulWidget {
 }
 
 class _AbsensiFormPageState extends State<AbsensiFormPage> {
-
+final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final _nameController = TextEditingController();
+  final _projectController = TextEditingController();
   var typeAbsen = 'masuk';
 
   final _formKey = GlobalKey<FormState>();
@@ -28,12 +32,14 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
   @override
   void initState() {
     _nameController.text = widget.name ?? '';
+    _projectController.text = widget.status ?? '';
     super.initState();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _projectController.dispose();
     super.dispose();
   }
 
@@ -59,6 +65,7 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
                 decoration: const InputDecoration(
                   labelText: 'Nama Karyawan',
                 ),
+                readOnly: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter  name';
@@ -66,6 +73,20 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
                   return null;
                 },
               );}),
+                       TextField(
+            controller: _projectController,
+            decoration: InputDecoration(
+              labelText: 'Project Name',
+              hintText: widget.name,
+              border: const OutlineInputBorder(),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _projectController.clear();
+                },
+              ),
+            ),
+          ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     value: typeAbsen,
@@ -92,12 +113,18 @@ class _AbsensiFormPageState extends State<AbsensiFormPage> {
                   onPressed: () {
                     if(_formKey.currentState?.validate() ?? false) {
                       final name = _nameController.text;
+                      final project = _projectController.text;
                       String type = typeAbsen;
-                      Navigator.pop(context, {'name': name, 'status':type });
+                      Navigator.pop(context, {'name': name, 'status':type , 'project': project});
                     }
                   }, 
                 ),
-              )
+              ),
+//               MobileScanner(
+//   onDetect: (result) {
+//     print(result.barcodes.first.rawValue);
+//   },
+// ),
             ],
           ),
         ),

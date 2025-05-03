@@ -9,4 +9,5 @@ class Absensi extends Table {
   DateTimeColumn get dateAbsen => dateTime().nullable()();
   TextColumn get status => text().withLength(min: 1, max: 50)();
   TextColumn get tagGps => text().withLength(min: 1, max: 100)();
+  TextColumn get project => text().withLength(min: 1, max: 150)();
 }

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tugas_firman/db/absensi_db.dart';
 import 'package:tugas_firman/db/app_db.dart';
 import 'package:tugas_firman/injector.dart';
@@ -17,6 +18,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
   final Absensi = <AbsensiData>[];
   final now = DateTime.now();
   var name = "Lionel Messi";
+  var project = "Project A";
   
   @override
   void initState() {
@@ -48,13 +50,15 @@ class _AbsensiPageState extends State<AbsensiPage> {
   Future<void> addAbsensi({
     String name = '',
     String status = 'Masuk',
+    String project = '',
   }) async {
     try {
       final absensi = AbsensiCompanion(
         name: Value(name),
         dateAbsen: Value(now),
         status: Value(status),
-        tagGps: Value("kantor")
+        tagGps: Value("kantor"),
+        project: Value(project),
       );
       await db.addAbsensi(absensi);
       await getAbsensi();
@@ -66,12 +70,15 @@ class _AbsensiPageState extends State<AbsensiPage> {
   Future<void> editAbsensi({
     required int id,
     String name = '',
-    double price = 0.0,
+    String status = 'Masuk',  
+    String project = 'Project A',
   }) async {
     try {
       final absensi = AbsensiCompanion(
         id: Value(id),
         name: Value(name),
+        status: Value(status),
+        project: Value(project),
       );
       await db.updateAbsensi(absensi);
       await getAbsensi();
@@ -97,6 +104,8 @@ class _AbsensiPageState extends State<AbsensiPage> {
               if(result != null) {
                 addAbsensi(
                   name: result['name'], 
+                  project: result['project'],
+                  status: result['status'],
                 );
               }
             },
@@ -109,14 +118,16 @@ class _AbsensiPageState extends State<AbsensiPage> {
       ListView.separated(
         padding: EdgeInsets.all(16),
         itemCount: Absensi.length,
-        separatorBuilder: (_, __) => SizedBox(height: 16), 
-        itemBuilder: (_, index) => Card(
+        separatorBuilder: (_, __) => SizedBox(height: 10), 
+        itemBuilder: (_, index) => 
+        Card(
           child: ListTile(
-            title: Text(Absensi[index].dateAbsen.toString()),
+            title: Text(DateFormat('EEE, dd MMMM y hh:mm:ss').format(Absensi[index].dateAbsen!)),
+            subtitle: Text(Absensi[index].project.toString()),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                                IconButton(
+              IconButton(
                   onPressed: () async {
                     final result = await Navigator.push(
                       context,
@@ -124,6 +135,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
                         builder: (context) => AbsensiFormPage(
                           name: Absensi[index].name,
                           status: Absensi[index].status,
+                          project: Absensi[index].project,
                         ),
                       ),
                     );
@@ -143,7 +155,7 @@ class _AbsensiPageState extends State<AbsensiPage> {
                   icon: Icon(Icons.delete),
                 ),
               ],  
-            )
+            ),
           ),
         ), 
       ),
