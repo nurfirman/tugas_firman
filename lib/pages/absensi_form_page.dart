@@ -166,6 +166,8 @@ Future<void> _requestPermission() async {
                   }, 
                 ),
               ),
+              FittedBox(
+              fit: BoxFit.contain,)
 //               MobileScanner(
 //   onDetect: (result) {
 //     print(result.barcodes.first.rawValue);

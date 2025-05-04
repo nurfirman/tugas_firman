@@ -5,7 +5,6 @@ import 'package:tugas_firman/bloc/auth/auth_state.dart';
 import 'package:tugas_firman/bloc/routes.dart';
 import 'package:tugas_firman/bloc/theme_cubit.dart';
 import 'package:tugas_firman/gps/get_location.dart';
-import 'package:tugas_firman/gps/listen_location.dart';
 import 'package:tugas_firman/gps/permission_status.dart';
 import 'package:tugas_firman/gps/service_enabled.dart';
 
@@ -99,12 +98,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-                            PermissionStatusWidget(),
               Divider(height: 32),
+              PermissionStatusWidget(),
               ServiceEnabledWidget(),
-              Divider(height: 32),
               GetLocationWidget(),
-              Divider(height: 32),
               Spacer(),
               SizedBox(
                 width: double.infinity,

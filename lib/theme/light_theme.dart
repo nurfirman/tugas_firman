@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tugas_firman/bloc/colors.dart';
 
 ThemeData lightTheme(context) => ThemeData(
+  
   colorScheme: ColorScheme.fromSeed(
     primary: AppColor.primaryLight,
     seedColor: Colors.deepPurple,
@@ -33,6 +34,7 @@ ThemeData lightTheme(context) => ThemeData(
     shape: Border(
       bottom: BorderSide(color: AppColor.dividerLight, width: 0.5)
     ),
+    
   ),
   bottomNavigationBarTheme: Theme.of(context).bottomNavigationBarTheme.copyWith(
     type: BottomNavigationBarType.fixed,
@@ -206,4 +208,5 @@ ThemeData lightTheme(context) => ThemeData(
     clipBehavior: Clip.antiAliasWithSaveLayer,
     backgroundColor: AppColor.backgroundCardLight,
   )
+  
 );

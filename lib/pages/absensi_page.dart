@@ -5,6 +5,7 @@ import 'package:tugas_firman/db/absensi_db.dart';
 import 'package:tugas_firman/db/app_db.dart';
 import 'package:tugas_firman/injector.dart';
 import 'package:tugas_firman/pages/absensi_form_page.dart';
+import 'package:tugas_firman/widgets/absensi_card.dart';
 
 class AbsensiPage extends StatefulWidget {
   const AbsensiPage({super.key});
@@ -94,8 +95,38 @@ class _AbsensiPageState extends State<AbsensiPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Absensi Labour Project'),
-        actions: [
-            IconButton(
+ 
+      ),
+      body: Stack(
+        fit: StackFit.loose,
+        alignment: Alignment.bottomCenter,  
+        children: [
+          ListView.separated(
+            padding: EdgeInsets.all(16),
+            itemCount: Absensi.length,
+            separatorBuilder: (_, __) => SizedBox(height: 10), 
+            itemBuilder: (_, index) => 
+            Card(
+              child: ListTile(
+                title: Text(DateFormat('EEE, dd MMMM y hh:mm:ss').format(Absensi[index].dateAbsen!)),
+                subtitle: Text("${Absensi[index].project} \n ${Absensi[index].tagGps}"),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Absensi[index].status != "masuk" ? Icons.arrow_back : Icons.arrow_forward),
+                  ],  
+                ),
+              ),
+            ), 
+          ),
+
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             onPressed: () async {
               final result = await Navigator.push(
                 context,
@@ -111,59 +142,8 @@ class _AbsensiPageState extends State<AbsensiPage> {
                   tagGps: result['tagGps'],
                 );
               }
-            },
-            icon: Icon(Icons.add),
-          ),
-          
+            }, child: Text("Add Absensi")),
         ],
-      ),
-      body: 
-      ListView.separated(
-        padding: EdgeInsets.all(16),
-        itemCount: Absensi.length,
-        separatorBuilder: (_, __) => SizedBox(height: 10), 
-        itemBuilder: (_, index) => 
-        Card(
-          child: ListTile(
-            title: Text(DateFormat('EEE, dd MMMM y hh:mm:ss').format(Absensi[index].dateAbsen!)),
-            subtitle: Text("${Absensi[index].project} \n ${Absensi[index].tagGps}"),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Absensi[index].status != "masuk" ? Icons.arrow_back : Icons.arrow_forward),
-              // IconButton(
-              //     onPressed: () async {
-              //       final result = await Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => AbsensiFormPage(
-              //             name: Absensi[index].name,
-              //             status: Absensi[index].status,
-              //             project: Absensi[index].project,
-              //             tagGps: Absensi[index].tagGps,
-              //           ),
-              //         ),
-              //       );
-              //       if(result != null) {
-              //         editAbsensi(
-              //           id: Absensi[index].id,
-              //           name: result['name'], 
-              //         );
-              //       }
-              //     },
-              //     icon: Icon(Icons.edit),
-              //   ),
-              //   IconButton(
-              //     onPressed: () {
-              //       delete(Absensi[index].id);
-              //     },
-              //     icon: Icon(Icons.delete),
-              //   ),
-              ],  
-            ),
-          ),
-        ), 
-        
       ),
     );
   }
