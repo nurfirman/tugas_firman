@@ -95,7 +95,6 @@ class _AbsensiPageState extends State<AbsensiPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Absensi Labour Project'),
- 
       ),
       body: Stack(
         fit: StackFit.loose,
@@ -120,29 +119,40 @@ class _AbsensiPageState extends State<AbsensiPage> {
             ), 
           ),
 
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              
+                  width: double.infinity,
+                
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+foregroundColor: Colors.black,
+backgroundColor: Colors.amber,
+padding: const EdgeInsets.all(12),
+),
+                    onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AbsensiFormPage(),
+                    ),
+                  );
+                  
+                  if(result != null) {
+                    addAbsensi(
+                      name: result['name'], 
+                      project: result['project'],
+                      status: result['status'],
+                      tagGps: result['tagGps'],
+                    );
+                  }
+                }, 
+                    label: const Text("Add Absensi"),
+                    icon: Icon(Icons.add),
+                  ),
             ),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AbsensiFormPage(),
-                ),
-              );
-              if(result != null) {
-                addAbsensi(
-                  name: result['name'], 
-                  project: result['project'],
-                  status: result['status'],
-                  tagGps: result['tagGps'],
-                );
-              }
-            }, child: Text("Add Absensi")),
+          ),
         ],
       ),
     );

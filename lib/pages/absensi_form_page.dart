@@ -24,8 +24,6 @@ class AbsensiFormPage extends StatefulWidget {
   State<AbsensiFormPage> createState() => _AbsensiFormPageState();
 }
 
-
-
 class _AbsensiFormPageState extends State<AbsensiFormPage> {
   String barcode = "";
   final _nameController = TextEditingController();
@@ -118,17 +116,27 @@ Future<void> _requestPermission() async {
                   return null;
                 },
               );}),
-                       TextField(
+            TextField(
+              
             controller: _projectController,
             decoration: InputDecoration(
+              //prefixIcon: Icon(Icons.qr_code),
               labelText: 'Project Name',
               hintText: widget.name,
               border: const OutlineInputBorder(),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  _projectController.clear();
-                },
+              suffixIcon: 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                mainAxisSize: MainAxisSize.min, // added line
+                children: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _projectController.clear();
+                    },
+                  ),  
+                  Icon(Icons.qr_code)
+                ],
               ),
             ),
           ),
