@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           CircleAvatar(
                           backgroundColor: Colors.grey,
-                           child: Text(state.user?.name![0] ?? ''),
+                           child: Text(state.user?.username![0] ?? ''),
                            //  backgroundImage: NetworkImage("https://akcdn.detik.net.id/community/media/visual/2022/12/25/lionel-messi_169.jpeg?w=600&q=90"),
                           ),
                           Column(
@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               Text(
-                                state.user?.email ?? '',
+                                state.user?.username ?? '',
                                 style: const TextStyle(
                                   fontSize: 16,
                                 ),

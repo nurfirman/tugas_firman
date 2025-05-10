@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: () => authCubit.login(
-                          email: emailController.text,
+                          username: emailController.text,
                           password: passwordController.text),
                       child: state.loading
                           ? const SizedBox(

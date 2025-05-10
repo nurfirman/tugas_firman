@@ -11,7 +11,7 @@ class NetworkService {
 
   NetworkService(this.authStorage) {
     final baseOptions = BaseOptions(
-      baseUrl: 'https://nginfoin.my.id/public',
+      baseUrl: 'https://test.dooski.id',
       connectTimeout: Duration(seconds: requestTimeOut),
       receiveTimeout: Duration(seconds: requestTimeOut),
       responseType: ResponseType.json,

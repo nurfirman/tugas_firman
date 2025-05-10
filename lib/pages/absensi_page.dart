@@ -5,7 +5,6 @@ import 'package:tugas_firman/db/absensi_db.dart';
 import 'package:tugas_firman/db/app_db.dart';
 import 'package:tugas_firman/injector.dart';
 import 'package:tugas_firman/pages/absensi_form_page.dart';
-import 'package:tugas_firman/widgets/absensi_card.dart';
 
 class AbsensiPage extends StatefulWidget {
   const AbsensiPage({super.key});

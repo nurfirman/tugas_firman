@@ -37,5 +37,5 @@ void networkInjector() {
     getIt.get<AuthLocalStorage>()
   );
   getIt.registerSingleton(networkService);
-  getIt.registerSingleton<AuthRemoteData>(AuthRemoteDataImpl(networkService));
+  getIt.registerSingleton<AuthRemoteData>(AuthRemoteData(networkService, baseUrl: 'https://test.dooski.id'),);
 }

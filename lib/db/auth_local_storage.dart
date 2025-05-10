@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:tugas_firman/model/user_model.dart';
 
 class AuthLocalStorage {
-
   late final Box box;
 
   AuthLocalStorage(this.box);
@@ -17,14 +16,17 @@ class AuthLocalStorage {
 
   Future<void> setUser(User value) async {
     await box.put('name', value.name);
-    await box.put('email', value.email);
+    await box.put('username', value.username);
+    await box.put('role', value.role);
   }
 
   User? getUser() {
     final name = box.get('name');
-    final email = box.get('email');
-    if(name != null) {
-      return User(name: name, email: email);
+    final username = box.get('username');
+    final role = box.get('role');
+
+    if (name != null && username != null) {
+      return User(name: name, username: username, role: role);
     }
     return null;
   }
@@ -32,7 +34,7 @@ class AuthLocalStorage {
   Future<void> clear() async {
     await box.delete('token');
     await box.delete('name');
-    await box.delete('email');
+    await box.delete('username');
+    await box.delete('role');
   }
-
 }
